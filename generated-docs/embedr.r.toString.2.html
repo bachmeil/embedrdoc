@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>toString (embedr.r.toString)</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <script src="script.js" type="text/javascript"></script>
+
+	
+	<link rel="prefetch" href="search-results.html" />
+</head>
+<body>
+	<div id="page-header">
+		<div id="logotype">
+		<span>Documentation</span>
+		<nav>
+			<a href="http://dlang.org/">Dlang.org</a>
+		</nav>
+		</div>
+
+		<form id="search" action="search-docs.html">
+			<input placeholder="Find a symbol name..." name="searchTerm" type="search" />
+			<input type="submit" value="Go" />
+		</form>
+	</div>
+	<div id="page-body">
+		<div id="page-content">
+		<h1>toString</h1><div class="breadcrumbs"><a href="embedr.html" class="breadcrumb">embedr</a><a href="embedr.r.html" class="breadcrumb">r</a></div><div><div class="documentation-comment synopsis"><div><p>Copies a string allocated in R from a character vector into a D string.</p></div></div></div><div class="annotated-prototype"><ol class="overloads"><li class="overload-option"><a href="embedr.r.toString.1.html"><span class="overload-signature"><tt class="highlighted"><span class="type">string</span></tt> <span class="name">toString</span><tt class="highlighted">(<span class="hid">Robj</span> <span class="hid">cstr</span>)</tt></span></a></li><li class="active-overload-option"><span class="overload-signature"><tt class="highlighted"><span class="type">string</span></tt> <span class="name">toString</span><tt class="highlighted">(<span class="hid">Robj</span> <span class="hid">sv</span>, <span class="type">int</span> <span class="hid">ii</span>)</tt></span><div class="function-prototype"><div class="attributes"></div><div class="return-type"><span class="builtin-type">string</span></div><div class="function-name">toString</div><div class="template-parameters"></div><div class="runtime-parameters">(<div class="parameters-list toplevel"><div class="runtime-parameter-item parameter-item"><span class="parameter-type-holder"><span class="parameter-type"><a class="name" title="embedr.r.Robj" href="embedr.r.Robj.html" data-ident="Robj">Robj</a></span></span> <span data-ident="sv" class="parameter-name name"><a href="#param-sv">sv</a></span></div><span class="comma">,</span><div class="runtime-parameter-item parameter-item"><span class="parameter-type-holder"><span class="parameter-type"><span class="builtin-type">int</span></span></span> <span data-ident="ii" class="parameter-name name"><a href="#param-ii">ii</a></span></div></div>)</div><div class="function-contracts"></div></div></li></ol></div><div><h2 id="parameters"><a href="#parameters" class="header-anchor">Parameters</a></h2><dl class="parameter-descriptions"><dt id="param-sv"><a data-ident="sv" href="#param-sv" class="parameter-name">sv</a></dt><dd><div class="parameter-type-holder">Type: <span class="parameter-type"><a title="embedr.r.Robj" href="embedr.r.Robj.html" class="xref"><span data-ident="Robj" class="name">Robj</span></a></span></div><div class="documentation-comment"><div><p>A character vector created in R and passed to D.</p></div></div></dd><dt id="param-ii"><a data-ident="ii" href="#param-ii" class="parameter-name">ii</a></dt><dd><div class="parameter-type-holder">Type: <span class="parameter-type"><span class="builtin-type">int</span></span></div><div class="documentation-comment"><div><p>The index (starting at zero) holding the string to be copied into a D string.</p></div></div></dd></dl><h2 id="examples"><a href="#examples" class="header-anchor">Examples</a></h2><div class="documentation-comment"><div><pre data-language="" class="block-code"># R code
+titles = c(&quot;Chief Clown&quot;, &quot;Chief Joker&quot;, &quot;Chief Nut&quot;)
+.Call(&quot;foo&quot;, titles)
+
+// D code
+Robj foo(Robj r_titles) {
+ string d_title = toString(r_titles, 1); // Copies &quot;Chief Joker&quot; into title.
+ . . .
+}</pre></div></div><h2 id="see-also"><a href="#see-also" class="header-anchor">See Also</a></h2><div class="documentation-comment see-also-section"><div><p><a href="embedr.r.stringArray.2.html" class="xref">stringArray</a></p></div></div><h2 id="meta"><a href="#meta" class="header-anchor">Meta</a></h2><div class="documentation-comment source-section other-section"><h3 id="source"><a href="#source" class="header-anchor">Source</a></h3><div><p><a href="source/embedr.r.d.html#L610">See Implementation</a><br /></p></div></div></div></div>
+		<div id="page-nav"><a href="embedr.html" class="parent">embedr</a><a href="embedr.r.html" class="parent">r</a>
+		<span class="type-separator">aliases</span><ul><li><a href="embedr.r.Robj.html" class="alias">Robj</a></li></ul><span class="type-separator">functions</span><ul><li><a href="embedr.r.assertR.html" class="function">assertR</a></li><li><a href="embedr.r.createRLibrary.html" class="function">createRLibrary</a></li><li><a href="embedr.r.dbeta.html" class="function">dbeta</a></li><li><a href="embedr.r.dexp.html" class="function">dexp</a></li><li><a href="embedr.r.dgamma.html" class="function">dgamma</a></li><li><a href="embedr.r.dnbeta.html" class="function">dnbeta</a></li><li><a href="embedr.r.dnorm4.html" class="function">dnorm4</a></li><li><a href="embedr.r.dunif.html" class="function">dunif</a></li><li><a href="embedr.r.dup.html" class="function">dup</a></li><li><a href="embedr.r.evalR.html" class="function">evalR</a></li><li><a href="embedr.r.evalRQ.1.html" class="function">evalRQ</a></li><li><a href="embedr.r.expm1.html" class="function">expm1</a></li><li><a href="embedr.r.fprec.html" class="function">fprec</a></li><li><a href="embedr.r.fromLast.html" class="function">fromLast</a></li><li><a href="embedr.r.fround.html" class="function">fround</a></li><li><a href="embedr.r.fsign.html" class="function">fsign</a></li><li><a href="embedr.r.ftrunc.html" class="function">ftrunc</a></li><li><a href="embedr.r.getAttrib.1.html" class="function">getAttrib</a></li><li><a href="embedr.r.isInteger.html" class="function">isInteger</a></li><li><a href="embedr.r.isMatrix.html" class="function">isMatrix</a></li><li><a href="embedr.r.isNumeric.html" class="function">isNumeric</a></li><li><a href="embedr.r.isVector.html" class="function">isVector</a></li><li><a href="embedr.r.last.html" class="function">last</a></li><li><a href="embedr.r.length.html" class="function">length</a></li><li><a href="embedr.r.log1p.html" class="function">log1p</a></li><li><a href="embedr.r.names.html" class="function">names</a></li><li><a href="embedr.r.print.html" class="function">print</a></li><li><a href="embedr.r.printR.1.html" class="function">printR</a></li><li><a href="embedr.r.robj.1.html" class="function">robj</a></li><li><a href="embedr.r.scalar.1.html" class="function">scalar</a></li><li><a href="embedr.r.setAttrib.1.html" class="function">setAttrib</a></li><li><a href="embedr.r.sign.html" class="function">sign</a></li><li><a href="embedr.r.source.html" class="function">source</a></li><li><a href="embedr.r.stringArray.1.html" class="function">stringArray</a></li><li><a href="embedr.r.toR.1.html" class="function">toR</a></li><li><a href="embedr.r.toString.1.html" class="function current">toString</a></li><li><a href="embedr.r.tsp.html" class="function">tsp</a></li></ul><span class="type-separator">structs</span><ul><li><a href="embedr.r.ProtectedRObject.html" class="struct">ProtectedRObject</a></li><li><a href="embedr.r.RIntVector.html" class="struct">RIntVector</a></li><li><a href="embedr.r.RList.html" class="struct">RList</a></li><li><a href="embedr.r.RMatrix.html" class="struct">RMatrix</a></li><li><a href="embedr.r.RObjectStorage.html" class="struct">RObjectStorage</a></li><li><a href="embedr.r.RString.html" class="struct">RString</a></li><li><a href="embedr.r.RVector.html" class="struct">RVector</a></li><li><a href="embedr.r.sexprec.html" class="struct">sexprec</a></li></ul><span class="type-separator">variables</span><ul><li><a href="embedr.r.M_E.html" class="variable">M_E</a></li></ul></div>
+	</div>
+	<div id="page-footer">Page generated by <a href="https://github.com/adamdruppe/adrdox">adrdox</a></div>
+</body>
+</html>

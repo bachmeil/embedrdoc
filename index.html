@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+.content {
+    margin: auto;
+    max-width: 800px;
+    font-size: 120%;
+    margin-top: 20px;
+}
+
+a {
+    text-decoration: none;
+}
+
+pre > code {
+  padding: .2rem .5rem;
+  margin: 0 .2rem;
+  font-size: 90%;
+  white-space: nowrap;
+  background: #F1F1F1;
+  border: 1px solid #E1E1E1;
+  border-radius: 4px; 
+  display: block;
+  padding: 1rem 1.5rem;
+  white-space: pre; 
+}
+
+h1 {
+	font-family: sans;
+	font-size: 150%;
+	border-bottom: 2px solid;
+}
+
+h2, h3 {
+	font-family: sans;
+	font-size: 125%;
+}
+
+.header {
+	border-bottom: 1px solid;
+	font-size: 160%;
+	font-family: sans;
+	color: blue;
+	padding-bottom: 5px;
+	border-bottom-color: rgb(190, 190, 190);
+	margin-left: 0px;
+}
+
+</style>
+</head>
+<body>
+<div class="content"><br><br>
+<h1 id="embedr">embedr</h1>
+<p>D is a nice programming language, but it doesn't have many libraries for statistical analysis. One way to solve that problem would be to port all of R's libraries to D. With a few million programmer hours, you could get a good start on that task. A more realistic solution, taken by this project, is to facilitate communication between D and R. This can be done in two ways:</p>
+<p><strong>Calling D functions from R.</strong> The main program is written in R, but bottlenecks and anything for which D is better are rewritten in D, compiled into a shared library, and loaded into R. This procedure is commonly used to call C, C++, and Fortran code from R. The primary advantage of this approach is that other R users can call the D functions you've written, even if they don't know anything about D. Currently, this can be done using DMD or LDC on Linux, and LDC on Windows or Mac.</p>
+<p><strong>Calling R functions from D.</strong> You can use the excellent <a href="https://github.com/eddelbuettel/rinside">RInside</a> project to embed an R interpreter inside your D program. Data is passed efficiently because everything in R is a C struct (SEXPREC). You can allocate SEXPREC structs from D code and pass pointers to them between the languages. This approach is best for someone that prefers to write as much as possible in D without giving up any functionality they have in R. This should work without problems on Linux, Windows, or Mac, but I've only tested it on Linux. There is a dub.sdl file below if you want to try it out. Docker works well on Windows and Mac. You can find a Dockerfile and an explanation of how to use it <a href="https://lancebachmeier.com/embedr/dockerusage.html">here</a>. If you are using Windows 10, the combination of WSL with ConEmu works very well.</p>
+<h2 id="library-documentation">Library Documentation</h2>
+<p>Documentation was produced using <a href="https://github.com/adamdruppe/adrdox">adrdox</a>. You can view it <a href="doc/embedr.html">here</a>.</p>
+<h2 id="linux-installation-calling-d-functions-from-r">Linux Installation (calling D functions from R)</h2>
+<p>If you only want to call D functions from R, installation is easy.</p>
+<p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R. 2. Install the embedr package using devtools:</p>
+<pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
+<p>That is it. If you have a standard installation (i.e., as long as you haven't done something strange to cause libR.so to be hidden in a place the system can't find it) you are done.</p>
+<h2 id="linux-installation-calling-r-functions-from-d">Linux Installation (calling R functions from D)</h2>
+<p>Embedding R inside D requires you to install a slightly modified version of the RInside package in addition to everything above.</p>
+<p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R.<br />
+2. Install <a href="https://bitbucket.org/bachmeil/rinsidec">RInsideC</a> using devtools. In R:</p>
+<pre><code>library(devtools)
+install_bitbucket(&quot;bachmeil/rinsidec&quot;)</code></pre>
+<p>3. Install the embedr package using devtools:</p>
+<pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
+<p>That is it. If you have a standard installation (i.e., as long as you haven't done something strange to cause libR.so to be hidden in a place the system can't find it) you are done.</p>
+<h2 id="windows-installation-calling-d-functions-from-r">Windows Installation (calling D functions from R)</h2>
+<p>This is a little trickier for a variety of reasons. The only recommended approach at this time is to let the embedr package install the LDC compiler and do the configuration for you.</p>
+<p>1. Install R. I recommend updating to the latest version of R.<br />
+2. Install the embedr package using devtools:</p>
+<pre><code>library(devtools)
+install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
+<p>3. Install the LDC compiler and configure everything:</p>
+<pre><code>library(embedr)
+ldc.install()
+embedr.configure()</code></pre>
+<p>You should be done at this point. I cannot guarantee that, however, due to problems with directories being changed by Windows to read-only status. More details can be found <a href="https://lancebachmeier.com/computing/d-from-r-windows.html">here</a>.</p>
+<h2 id="examples-calling-d-functions-from-r">Examples: Calling D Functions From R</h2>
+<p>Note that Windows requires an explicit export attribute when defining a function that is to be included as part of a shared library. I present both versions of the simple example to clarify that, but for the other examples you will have to add the export attribute. There are some other differences in the Linux and Windows versions. These are due to the fact that those functions were created at different times, and I have not yet had time to make things consistent. I will eventually get around to doing that.</p>
+<h2 id="simple-example-linux">Simple Example (Linux)</h2>
+<p>Save this code in a file called librtest.d:</p>
+<pre><code>extern(C) {
+  Robj add(Robj rx, Robj ry) {
+    double result = rx.scalar + ry.scalar;
+    return result.robj;
+  }
+}</code></pre>
+<p>Then in R, from the same directory as librtest.d, create and load the shared library using the <code>dmd</code> function:</p>
+<pre><code>compileFile(&quot;librtest.d&quot;, &quot;rtest&quot;)</code></pre>
+<p>Test it out:</p>
+<pre><code>.Call(&quot;add&quot;, 2.5, 3.65)</code></pre>
+<h2 id="simple-example-windows">Simple Example (Windows)</h2>
+<p>The same thing can be achieved in Windows as follows. Save this code in librtest.d:</p>
+<pre><code>import embedr.r;
+mixin(createRLibrary(&quot;rtest&quot;));
+
+export extern(C) {
+  Robj add(Robj rx, Robj ry) {
+    double result = rx.scalar + ry.scalar;
+    return result.robj;
+  }
+}</code></pre>
+<p>In the same directory as librtest.d, create and load the DLL:</p>
+<pre><code>ldc(&quot;librtest&quot;)</code></pre>
+<p>Test it out:</p>
+<pre><code>.Call(&quot;add&quot;, 2.5, 3.65)</code></pre>
+<h2 id="embedding-r-inside-d">Embedding R Inside D</h2>
+<p>The examples that follow work on Linux.</p>
+<h2 id="hello-world">Hello World</h2>
+<p>Let's start with an example that has R print &quot;Hello, World!&quot; to the screen. Put the following code in a file named hello.d:</p>
+<pre><code>import embedr.r;
+
+void main() {
+    evalRQ(`print(&quot;Hello, World!&quot;)`);
+}</code></pre>
+<p>In the directory containing hello.d, run the following in R:</p>
+<pre><code>library(embedr)
+dmd(&quot;hello&quot;)</code></pre>
+<p>This will tell dmd to compile your file, handling includes and linking for you, and then run it for you. You should see &quot;Hello, World!&quot; printed somewhere. The other examples are the same: save the code in a .d file, then call the dmd function to compile and run it.</p>
+<h2 id="using-dub">Using Dub</h2>
+<p>I do not normally use Dub. However, many folks do, and if you want to add dependencies on other libraries like Mir, you don't have much choice but to use Dub.</p>
+<p>Here's the dub.sdl file I used to compile the Hello World example above:</p>
+<pre><code>name &quot;myproject&quot;
+description &quot;embedr hello world&quot;
+authors &quot;lance&quot;
+copyright &quot;Copyright 2018, lance&quot;
+license &quot;GPLv2&quot;
+versions &quot;r&quot; &quot;standalone&quot;
+lflags &quot;/usr/lib/libR.so&quot; &quot;/usr/local/lib/R/site-library/RInsideC/lib/libRInside.so&quot;</code></pre>
+<p>The <code>lflags</code> paths may be different on your machine, and they definitely will be different if you're not using Linux.</p>
+<h2 id="passing-a-matrix-from-d-to-r">Passing a Matrix From D to R</h2>
+<p>Let's write a program that tells R to allocate a (2x2) matrix, fills the elements in D, and prints it out in both D and R.</p>
+<pre><code>import embedr.r;
+
+void main() {
+    auto m = RMatrix(2,2);
+    m[0,0] = 1.5;
+    m[0,1] = 2.5;
+    m[1,0] = 3.5;
+    m[1,1] = 4.5;
+    m.print(&quot;Matrix allocated by R, but filled in D&quot;);
+}</code></pre>
+<p><code>RMatrix</code> is a struct that holds a pointer to an R object plus the dimensions of the matrix. When the constructor is called with two integer arguments, it has R allocate a matrix with those dimensions.</p>
+<p>The library includes some basic functionality for working with <code>m</code>, including getting and setting elements, and printing. Alternatively, we could have passed <code>m</code> to R and told R to print it:</p>
+<pre><code>import embedr.r;
+
+void main() {
+    auto m = RMatrix(2,2);
+    m[0,0] = 1.5;
+    m[0,1] = 2.5;
+    m[1,0] = 3.5;
+    m[1,1] = 4.5;
+  m.toR(&quot;mm&quot;); // Now there is an object inside R called mm
+  evalRQ(`print(mm)`);</code></pre>
+<h2 id="passing-a-matrix-from-r-to-d">Passing a Matrix From R to D</h2>
+<p>We can also pass a matrix in the opposite direction. Let's allocate and fill a matrix in R and then work with it in D.</p>
+<pre><code>import embedr.r;
+
+void main() {
+  // Generate a (20x5) random matrix in R
+  evalRQ(`m &lt;- matrix(rnorm(100), ncol=5)`);
+  
+  // Create an RMatrix struct in D that holds a pointer to m
+  auto dm = RMatrix(&quot;m&quot;);
+  dm.print(&quot;This is a matrix that was created in R&quot;);
+  
+  // Change one element and verify that it has changed in R
+  dm[0,0] = dm[0,0]*4.5;
+  printR(&quot;m&quot;);
+}</code></pre>
+<p>A comment on the last line: <code>printR</code> uses the R API printing function to print an R object. If you pass a string as the argument to <code>printR</code>, it will print the object with that name in R. It will <em>not</em> print the string that you pass to it as an argument. D does not know anything about <code>m</code>. It only knows about <code>dm</code>, which holds a pointer to <code>m</code>.</p>
+<h2 id="rvector">RVector</h2>
+<p>A vector can be represented as a matrix with one column. In R, vectors and matrices are entirely different objects. That doesn't matter much in D because vectors <em>are</em> represented as matrices in D. I have added an <code>RVector</code> struct to allow the use of <code>foreach</code>. Here is an example:</p>
+<pre><code>import embedr.r;
+import std.stdio;
+
+void main() {
+  // Have R allocate a vector with 5 elements and copy the elements of the double[] into it
+    auto v = RVector([1.1, 2.2, 3.3, 4.4, 5.5]);
+  
+  // Pass v to R, creating variable rv inside the R interpreter
+    v.toR(&quot;rv&quot;);
+    printR(&quot;rv&quot;);
+    
+  // Use foreach to print the elements
+    foreach(val; v) {
+        writeln(val);
+    }
+}</code></pre>
+<h2 id="rvector-slices">RVector Slices</h2>
+<p>You can slice an RVector, as shown in this example.</p>
+<pre><code>import embedr.r;
+import std.stdio;
+
+void main() {
+    evalRQ(`v &lt;- rnorm(15)`);
+    auto rv = RVector(&quot;v&quot;);
+    foreach(val; rv) {
+        writeln(val);
+    }
+    rv[1..5].print(&quot;This is a slice of the vector&quot;);
+}</code></pre>
+<h2 id="working-with-r-lists">Working With R Lists</h2>
+<p>Lists are very important in R, as they are the most common way to construct a heterogeneous vector. Although you could work directly with an R list (there's an <code>RList</code> struct to do that) you lose most of the nice features if you do. For that reason I created the <code>NamedList</code> struct. You can refer to elements by number (elements are ordered as in any array) or by name. You can add elements by name (but only that way, because every element in a <code>NamedList</code> needs a name).</p>
+<pre><code>
+import embedr.r;
+import std.stdio;
+
+void main() {
+  // Create a list in R
+  evalRQ(`rl &lt;- list(a=rnorm(15), b=matrix(rnorm(100), ncol=4))`);
+  
+  // Create a NamedList struct to work with it in D
+  auto dl = NamedList(&quot;rl&quot;);
+  dl.print;
+  
+  // Pull out a matrix
+  auto dlm = RMatrix(dl[&quot;b&quot;]);
+  dlm.print(&quot;This is the matrix from that list&quot;);
+  
+  // Pull out a vector
+  auto dlv = RVector(dl[&quot;a&quot;]);
+  dlv.print(&quot;This is the vector from that list&quot;);
+
+  // Create a NamedList in D and put some R objects into it
+  // NamedList holds pointers to R objects, which can be pulled
+  // out using .data
+  NamedList nl;
+  nl[&quot;a&quot;] = dlm.data;
+  nl[&quot;b&quot;] = dlv.data;
+  
+  // Send to R as rl2
+  nl.toR(&quot;rl2&quot;);
+    
+  // Can verify that the elements are reversed
+  printR(&quot;rl2&quot;);
+}</code></pre>
+<h2 id="scalars-and-strings">Scalars and Strings</h2>
+<p>R does not have a scalar type. What appears to be a scalar is a vector with one element. On the D side, however, there are scalars, so you have to specify that you are working with a scalar your D code. On a different note, we can pass strings between R and D.</p>
+<pre><code>import embedr.r;
+import std.stdio;
+
+void main() {
+  // Create some &quot;scalars&quot; in R
+  evalRQ(`a &lt;- 4L`);
+  evalRQ(`b &lt;- 4.5`);
+  evalRQ(`d &lt;- &quot;hello world&quot;`);
+    
+  // Print the values of those R variables from D
+  // Pull the integer a from R into D
+  writeln(scalar!int(&quot;a&quot;));
+  
+  // Also pulls in an integer, but creates a long rather than int
+  writeln(scalar!long(&quot;a&quot;));
+  
+  // The default type of scalar is double, so it is not necessary to specify the type in that case
+  writeln(scalar(&quot;b&quot;));
+  
+  // Pull the string d from R into D
+  writeln(scalar!string(&quot;d&quot;));
+    
+  // Can also work with a string[]
+  [&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;].toR(&quot;dstring&quot;);
+  printR(&quot;dstring&quot;);
+    
+  // Create a vector of strings in R and pull it into D as a string[]
+  evalRQ(`rstring &lt;- c(&quot;under&quot;, &quot;the&quot;, &quot;bridge&quot;)`);
+  writeln(stringArray(&quot;rstring&quot;));
+}</code></pre>
+<p>There is more functionality available (the entire R API, in fact) but the single goal of this library is to facilitate the passing of commonly-used data types between the two languages. Other libraries are available for the functions in the R standalone math library, optimization, and so on.</p>
+
+<br>
+</div>
+<br><br>
+</body>
+</html>
