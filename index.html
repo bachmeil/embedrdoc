@@ -6,12 +6,13 @@
   <meta name="generator" content="pandoc" />
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
+<link href="https://unpkg.com/picnic" rel="stylesheet">
 
 <style type="text/css">
 .content {
     margin: auto;
     max-width: 800px;
-    font-size: 120%;
+    font-size: 100%;
     margin-top: 20px;
 }
 
@@ -19,23 +20,9 @@ a {
     text-decoration: none;
 }
 
-pre > code {
-  padding: .2rem .5rem;
-  margin: 0 .2rem;
-  font-size: 90%;
-  white-space: nowrap;
-  background: #F1F1F1;
-  border: 1px solid #E1E1E1;
-  border-radius: 4px; 
-  display: block;
-  padding: 1rem 1.5rem;
-  white-space: pre; 
-}
-
 h1 {
 	font-family: sans;
 	font-size: 150%;
-	border-bottom: 2px solid;
 }
 
 h2, h3 {
@@ -43,42 +30,81 @@ h2, h3 {
 	font-size: 125%;
 }
 
-.header {
-	border-bottom: 1px solid;
-	font-size: 160%;
-	font-family: sans;
-	color: blue;
-	padding-bottom: 5px;
-	border-bottom-color: rgb(190, 190, 190);
-	margin-left: 0px;
+nav {
+  position: absolute;
 }
 
 </style>
 </head>
 <body>
-<div class="content"><br><br>
-<h1 id="embedr">embedr</h1>
-<p>D is a nice programming language, but it doesn't have many libraries for statistical analysis. One way to solve that problem would be to port all of R's libraries to D. With a few million programmer hours, you could get a good start on that task. A more realistic solution, taken by this project, is to facilitate communication between D and R. This can be done in two ways:</p>
-<p><strong>Calling D functions from R.</strong> The main program is written in R, but bottlenecks and anything for which D is better are rewritten in D, compiled into a shared library, and loaded into R. This procedure is commonly used to call C, C++, and Fortran code from R. The primary advantage of this approach is that other R users can call the D functions you've written, even if they don't know anything about D. Currently, this can be done using DMD or LDC on Linux, and LDC on Windows or Mac.</p>
-<p><strong>Calling R functions from D.</strong> You can use the excellent <a href="https://github.com/eddelbuettel/rinside">RInside</a> project to embed an R interpreter inside your D program. Data is passed efficiently because everything in R is a C struct (SEXPREC). You can allocate SEXPREC structs from D code and pass pointers to them between the languages. This approach is best for someone that prefers to write as much as possible in D without giving up any functionality they have in R. This should work without problems on Linux, Windows, or Mac, but I've only tested it on Linux. There is a dub.sdl file below if you want to try it out. Docker works well on Windows and Mac. You can find a Dockerfile and an explanation of how to use it <a href="https://lancebachmeier.com/embedr/dockerusage.html">here</a>. If you are using Windows 10, the combination of WSL with ConEmu works very well.</p>
-<h2 id="library-documentation">Library Documentation</h2>
+
+<div style="overflow: hidden;height: 40px;">
+
+<nav class="demo">
+  <a href="https://embedr.netlify.com/" class="brand">embedr</a>
+
+  <!-- responsive-->
+  <input id="bmenub" type="checkbox" class="show">
+  <label for="bmenub" class="burger pseudo button">menu</label>
+
+  <div class="menu">
+    <a href="https://bitbucket.org/bachmeil/embedr">Repo</a>
+    <a href="https://bitbucket.org/bachmeil/embedr/issues">Issues</a>
+    <a href="https://embedr.netlify.com/doc/embedr.html">Documentation</a>
+  </div>
+</nav>
+
+</div>
+
+<div class="content">
+<h1>Contents</h1>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#is-this-project-active">Is This Project Active?</a></li>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#calling-d-functions-from-r">Calling D Functions From R</a><ul>
+<li><a href="#linux-installation">Linux Installation</a></li>
+<li><a href="#windows-installation">Windows Installation</a></li>
+<li><a href="#mac-installation">Mac Installation</a></li>
+</ul></li>
+<li><a href="#embedding-r-inside-d">Embedding R Inside D</a><ul>
+<li><a href="#linux-installation-1">Linux Installation</a></li>
+</ul></li>
+<li><a href="#example-calling-d-functions-from-r">Example: Calling D Functions From R</a><ul>
+<li><a href="#simple-example-linux">Simple Example (Linux)</a></li>
+<li><a href="#simple-example-windows">Simple Example (Windows)</a></li>
+</ul></li>
+<li><a href="#example-calling-r-functions-from-d">Example: Calling R Functions From D</a></li>
+<li><a href="#dub">Dub</a></li>
+<li><a href="#more-examples">More Examples</a><ul>
+<li><a href="#passing-a-matrix-from-d-to-r">Passing a Matrix From D to R</a></li>
+<li><a href="#passing-a-matrix-from-r-to-d">Passing a Matrix From R to D</a></li>
+<li><a href="#rvector">RVector</a></li>
+<li><a href="#rvector-slices">RVector Slices</a></li>
+<li><a href="#working-with-r-lists">Working With R Lists</a></li>
+<li><a href="#scalars-and-strings">Scalars and Strings</a></li>
+</ul></li>
+</ul>
+<h1 id="overview">Overview</h1>
+<p>D is a nice programming language, but it doesn't have many libraries for statistical analysis. One way to solve that problem would be to port all of R's libraries to D. With a few million programmer hours, you could get a good start on that task. A more realistic solution, taken here, is to facilitate communication between D and R. This can be done in two ways:</p>
+<p><strong>Calling D functions from R.</strong> The main program is written in R, but bottlenecks and anything for which D is better are written in D, compiled into a shared library, and loaded into R. This procedure is commonly used to call C, C++, and Fortran code from R. The primary advantage of this approach is that other R users can call the D functions you've written, even if they don't know anything about D. Currently, this can be done using DMD or LDC on Linux, and LDC on Windows or Mac.</p>
+<p><strong>Calling R functions from D.</strong> You can use the excellent <a href="https://github.com/eddelbuettel/rinside">RInside</a> project to embed an R interpreter inside your D program. Data is passed efficiently because everything in R is a C struct (SEXPREC). You can allocate SEXPREC structs from D code and pass pointers to them between the languages. This approach is best for someone that prefers to write as much as possible in D without giving up any functionality they have in R.</p>
+<h1 id="is-this-project-active">Is This Project Active?</h1>
+<p>This project is largely complete. Lack of recent activity is a sign that the project is stable. I realize that there's a trend to say projects are dead if no new features have been added in the last 30 days. If you see that the last activity was two years ago, that means it's been working so well that I haven't had a reason to make any changes in two years. You shouldn't expect to see much activity in an interface between two mature languages; regularly adding features would be a sign that something is wrong.</p>
+<p>If something doesn't work, <a href="https://bitbucket.org/bachmeil/embedr/issues">file an issue</a>.</p>
+<h1 id="documentation">Documentation</h1>
 <p>Documentation was produced using <a href="https://github.com/adamdruppe/adrdox">adrdox</a>. You can view it <a href="doc/embedr.html">here</a>.</p>
-<h2 id="linux-installation-calling-d-functions-from-r">Linux Installation (calling D functions from R)</h2>
+<h1 id="calling-d-functions-from-r">Calling D Functions From R</h1>
+<p>I have successfully done this on Linux, Mac, and Windows. Linux support is best because that's the OS I use. <a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> to ask a question if you can't get it to work.</p>
+<h2 id="linux-installation">Linux Installation</h2>
 <p>If you only want to call D functions from R, installation is easy.</p>
 <p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R. 2. Install the embedr package using devtools:</p>
 <pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
 <p>That is it. If you have a standard installation (i.e., as long as you haven't done something strange to cause libR.so to be hidden in a place the system can't find it) you are done.</p>
-<h2 id="linux-installation-calling-r-functions-from-d">Linux Installation (calling R functions from D)</h2>
-<p>Embedding R inside D requires you to install a slightly modified version of the RInside package in addition to everything above.</p>
-<p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R.<br />
-2. Install <a href="https://bitbucket.org/bachmeil/rinsidec">RInsideC</a> using devtools. In R:</p>
-<pre><code>library(devtools)
-install_bitbucket(&quot;bachmeil/rinsidec&quot;)</code></pre>
-<p>3. Install the embedr package using devtools:</p>
-<pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
-<p>That is it. If you have a standard installation (i.e., as long as you haven't done something strange to cause libR.so to be hidden in a place the system can't find it) you are done.</p>
-<h2 id="windows-installation-calling-d-functions-from-r">Windows Installation (calling D functions from R)</h2>
-<p>This is a little trickier for a variety of reasons. The only recommended approach at this time is to let the embedr package install the LDC compiler and do the configuration for you.</p>
+<h2 id="windows-installation">Windows Installation</h2>
+<p>If you are using Windows 10, I recommend using WSL along with ConEmu. In my experience, it works smoothly, and you have access to all of your Windows directories from inside WSL. If you don't want to do that, you might try <a href="https://lancebachmeier.com/embedr/dockerusage.html">Docker</a>.</p>
+<p>The reason for avoiding native Windows development is not that it doesn't work, but because it requires extra steps. You can read details <a href="https://lancebachmeier.com/computing/d-from-r-windows.html">here</a>.</p>
+<p>The instructions that follow tell you how to use the embedr package to install the LDC compiler and let it do the configuration for you. I can't make any guarantees because Windows has problems with directories changing to read-only status. I plan to keep improving the situation, but unfortunately I don't have much time to devote to an OS I don't use (and when I do, I find WSL comfortable). Ideally, a Windows user will work with embedr and take over that part of development.</p>
 <p>1. Install R. I recommend updating to the latest version of R.<br />
 2. Install the embedr package using devtools:</p>
 <pre><code>library(devtools)
@@ -87,8 +113,21 @@ install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
 <pre><code>library(embedr)
 ldc.install()
 embedr.configure()</code></pre>
-<p>You should be done at this point. I cannot guarantee that, however, due to problems with directories being changed by Windows to read-only status. More details can be found <a href="https://lancebachmeier.com/computing/d-from-r-windows.html">here</a>.</p>
-<h2 id="examples-calling-d-functions-from-r">Examples: Calling D Functions From R</h2>
+<h2 id="mac-installation">Mac Installation</h2>
+<p>Installation on Mac is similar to Linux, but as I do not have access to a Mac, it is hard for me to add that functionality to embedr. That is the only reason embedr does not currently support Mac. <a href="https://lancebachmeier.com/embedr/dockerusage.html">Docker</a> works well. Please contact me if you are a Mac user and would like to take over embedr's Mac support. <a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> if you have questions about getting it to work.</p>
+<h1 id="embedding-r-inside-d">Embedding R Inside D</h1>
+<p>This should work without problems on Linux, Windows, or Mac, but I've only been able to test it on Linux. The easy approach is to do the compilation with the embedr package. Alternatively, you can use Dub, and I provide an example dub.sdl file below.</p>
+<p>Currently I can only give documentation for Linux because that is all I have used. There is no reason that it won't work on Windows or Mac, especially if you use Dub. If you use one of those platforms and you are interested in adding official support to embedr, please contact me.</p>
+<h2 id="linux-installation-1">Linux Installation</h2>
+<p>Embedding R inside D requires you to install a slightly modified version of the RInside package in addition to everything above.</p>
+<p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R.<br />
+2. Install <a href="https://bitbucket.org/bachmeil/rinsidec">RInsideC</a> using devtools. In R:</p>
+<pre><code>library(devtools)
+install_bitbucket(&quot;bachmeil/rinsidec&quot;)</code></pre>
+<p>3. Install the embedr package using devtools:</p>
+<pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
+<p>That is it. If you have a standard installation (i.e., as long as you haven't done something strange to cause libR.so to be hidden in a place the system can't find it) you are done.</p>
+<h1 id="example-calling-d-functions-from-r">Example: Calling D Functions From R</h1>
 <p>Note that Windows requires an explicit export attribute when defining a function that is to be included as part of a shared library. I present both versions of the simple example to clarify that, but for the other examples you will have to add the export attribute. There are some other differences in the Linux and Windows versions. These are due to the fact that those functions were created at different times, and I have not yet had time to make things consistent. I will eventually get around to doing that.</p>
 <h2 id="simple-example-linux">Simple Example (Linux)</h2>
 <p>Save this code in a file called librtest.d:</p>
@@ -117,10 +156,8 @@ export extern(C) {
 <pre><code>ldc(&quot;librtest&quot;)</code></pre>
 <p>Test it out:</p>
 <pre><code>.Call(&quot;add&quot;, 2.5, 3.65)</code></pre>
-<h2 id="embedding-r-inside-d">Embedding R Inside D</h2>
-<p>The examples that follow work on Linux.</p>
-<h2 id="hello-world">Hello World</h2>
-<p>Let's start with an example that has R print &quot;Hello, World!&quot; to the screen. Put the following code in a file named hello.d:</p>
+<h1 id="example-calling-r-functions-from-d">Example: Calling R Functions From D</h1>
+<p>Let's start with an example that tells R print &quot;Hello, World!&quot; to the screen. Put the following code in a file named hello.d:</p>
 <pre><code>import embedr.r;
 
 void main() {
@@ -129,8 +166,8 @@ void main() {
 <p>In the directory containing hello.d, run the following in R:</p>
 <pre><code>library(embedr)
 dmd(&quot;hello&quot;)</code></pre>
-<p>This will tell dmd to compile your file, handling includes and linking for you, and then run it for you. You should see &quot;Hello, World!&quot; printed somewhere. The other examples are the same: save the code in a .d file, then call the dmd function to compile and run it.</p>
-<h2 id="using-dub">Using Dub</h2>
+<p>This tells dmd to compile your file, handling includes and linking for you, and then run it for you. You should see &quot;Hello, World!&quot; printed somewhere. The other examples are the same: save the code in a .d file, then call the dmd function to compile and run it.</p>
+<h1 id="dub">Dub</h1>
 <p>I do not normally use Dub. However, many folks do, and if you want to add dependencies on other libraries like Mir, you don't have much choice but to use Dub.</p>
 <p>Here's the dub.sdl file I used to compile the Hello World example above:</p>
 <pre><code>name &quot;myproject&quot;
@@ -141,6 +178,8 @@ license &quot;GPLv2&quot;
 versions &quot;r&quot; &quot;standalone&quot;
 lflags &quot;/usr/lib/libR.so&quot; &quot;/usr/local/lib/R/site-library/RInsideC/lib/libRInside.so&quot;</code></pre>
 <p>The <code>lflags</code> paths may be different on your machine, and they definitely will be different if you're not using Linux.</p>
+<h1 id="more-examples">More Examples</h1>
+<p>The examples above were too basic to be practical. Here are some examples that demonstrate more useful functionality.</p>
 <h2 id="passing-a-matrix-from-d-to-r">Passing a Matrix From D to R</h2>
 <p>Let's write a program that tells R to allocate a (2x2) matrix, fills the elements in D, and prints it out in both D and R.</p>
 <pre><code>import embedr.r;
