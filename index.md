@@ -439,3 +439,10 @@ void main() {
 ```
 
 There is more functionality available (the entire R API, in fact) but the single goal of this library is to facilitate the passing of commonly-used data types between the two languages. Other libraries are available for the functions in the R standalone math library, optimization, and so on.
+
+# FAQ
+
+[What's the difference between functions dmd and compileFile?](dmd-vs-compilefile.html)  
+[Why use R for compilation rather than Dub?](r-not-dub.html)  
+[Can I use LDC?](ldc.html)  
+

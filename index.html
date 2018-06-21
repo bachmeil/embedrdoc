@@ -84,6 +84,7 @@ nav {
 <li><a href="#working-with-r-lists">Working With R Lists</a></li>
 <li><a href="#scalars-and-strings">Scalars and Strings</a></li>
 </ul></li>
+<li><a href="#faq">FAQ</a></li>
 </ul>
 <h1 id="overview">Overview</h1>
 <p>D is a nice programming language, but it doesn't have many libraries for statistical analysis. One way to solve that problem would be to port all of R's libraries to D. With a few million programmer hours, you could get a good start on that task. A more realistic solution, taken here, is to facilitate communication between D and R. This can be done in two ways:</p>
@@ -320,6 +321,10 @@ void main() {
   writeln(stringArray(&quot;rstring&quot;));
 }</code></pre>
 <p>There is more functionality available (the entire R API, in fact) but the single goal of this library is to facilitate the passing of commonly-used data types between the two languages. Other libraries are available for the functions in the R standalone math library, optimization, and so on.</p>
+<h1 id="faq">FAQ</h1>
+<p><a href="dmd-vs-compilefile.html">What's the difference between functions dmd and compileFile?</a><br />
+<a href="r-not-dub.html">Why use R for compilation rather than Dub?</a><br />
+<a href="ldc.html">Can I use LDC?</a></p>
 
 <br>
 </div>
