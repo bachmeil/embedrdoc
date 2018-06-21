@@ -1,7 +1,7 @@
 **Why use R for compilation rather than Dub?**
 
-There is nothing preventing you from using Dub - I even provide an
-example to show how Dub can be used.
+There is nothing preventing you from using Dub - I even provide 
+[an example](index.html#dub) to show how Dub can be used.
 
 My experience using Dub with embedr has been less than pleasant, while R's
 package manager has made things easy. In particular, if I want to call
