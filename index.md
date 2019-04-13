@@ -66,6 +66,8 @@ the system can't find it) you are done.
 
 ## Windows Installation
 
+*Update (04/13/2019): This threw errors the last time I tried it. There were changes in the recent versions of LDC and I can no longer get things to compile correctly. I strongly encourage you to use WSL. As always, I'm happy to let a Windows user take over that part of the project, as I'd rather not spend all of my limited time supporting an OS I don't use and, to my knowledge, nobody else has ever used for this. Moreover, since all you're doing is compiling code, it shouldn't take much for an actual Windows user.*
+
 If you are using Windows 10, I recommend using WSL along with ConEmu.
 In my experience, it works smoothly, and you have access to all of your
 Windows directories from inside WSL. If you don't want to do that, you
@@ -76,12 +78,8 @@ work, but because it requires extra steps. You can read details
 [here](https://lancebachmeier.com/computing/d-from-r-windows.html).
 
 The instructions that follow tell you how to use the embedr package to install the 
-LDC compiler and let it do the configuration for you. I can't make any
-guarantees because Windows has problems with directories changing to
-read-only status. I plan to keep improving the situation, but unfortunately
-I don't have much time to devote to an OS I don't use (and when I do,
-I find WSL comfortable). Ideally, a Windows user will work with embedr 
-and take over that part of development. 
+LDC compiler and let it do the configuration for you. *Update: These instructions no longer work for me.* I can't make any guarantees because Windows has problems with directories changing to read-only status. I plan to keep improving the situation, but unfortunately I don't have much time to devote to an OS I don't use (and when I do,
+I find WSL comfortable). *Update: I no longer have plans to improve the Windows situation due to changes in my work obligations.* 
 
 1\. Install R. I recommend updating to the latest version of R.  
 2\. Install the embedr package using devtools:
@@ -107,7 +105,7 @@ That is the only reason embedr does not currently support Mac.
 [Docker](https://lancebachmeier.com/embedr/dockerusage.html) works well.
 Please contact me if you are a Mac user and would like to take over
 embedr's Mac support. [File an issue](https://bitbucket.org/bachmeil/embedr/issues)
-if you have questions about getting it to work.
+if you have questions about getting it to work. I'll gladly add Mac support if someone sends me a recent model Macbook or the money to buy one. (Just to be clear, I don't actually expect anyone to do that, but that's what it will take.)
 
 # Embedding R Inside D
 
@@ -185,7 +183,7 @@ Test it out:
 
 ## Simple Example (Windows)
 
-The same thing can be achieved in Windows as follows. Save this code in
+*Update (04/13/2019): This no longer works for me.* The same thing can be achieved in Windows as follows. Save this code in
 librtest.d:
 
 ```
@@ -257,6 +255,12 @@ lflags "/usr/lib/libR.so" "/usr/local/lib/R/site-library/RInsideC/lib/libRInside
 
 The `lflags` paths may be different on your machine, and they definitely
 will be different if you're not using Linux.
+
+If you are familiar with Dub and want to create a package for code.dlang.org, please do. You don't need my permission.
+
+# Pulling R Data Into D
+
+If you are embedding R inside a D program, and you want to pull data from R into D, please read [this](pulling-r-data.html) first.
 
 # More Examples
 
