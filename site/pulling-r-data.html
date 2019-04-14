@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>pulling-r-data</title>
+  <style type="text/css">code{white-space: pre;}</style>
+<link href="https://unpkg.com/picnic" rel="stylesheet">
+
+<style type="text/css">
+.content {
+    margin: auto;
+    max-width: 800px;
+    font-size: 100%;
+    margin-top: 20px;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1 {
+	font-family: sans;
+	font-size: 150%;
+}
+
+h2, h3 {
+	font-family: sans;
+	font-size: 125%;
+}
+
+nav {
+  position: absolute;
+}
+
+</style>
+</head>
+<body>
+
+<div style="overflow: hidden;height: 40px;">
+
+<nav class="demo">
+  <a href="https://embedr.netlify.com/" class="brand">embedr</a>
+
+  <!-- responsive-->
+  <input id="bmenub" type="checkbox" class="show">
+  <label for="bmenub" class="burger pseudo button">menu</label>
+
+  <div class="menu">
+    <a href="https://bitbucket.org/bachmeil/embedr">Repo</a>
+    <a href="https://bitbucket.org/bachmeil/embedr/issues">Issues</a>
+    <a href="https://embedr.netlify.com/doc/embedr.html">Documentation</a>
+  </div>
+</nav>
+
+</div>
+
+<div class="content">
+<h1 id="pulling-r-data-into-d">Pulling R Data Into D</h1>
+<p>The motivation for embedding an R interpreter inside your D program is that it gives you access to the full R ecosystem.</p>
+<p>Suppose you’re processing data in a D program, and after the dataset is prepared, you want to estimate the logit model in <a href="https://stats.idre.ucla.edu/r/dae/logit-regression/">this example</a>. After estimation, you want to do further analysis of the vector of residuals. Phobos doesn’t provide a logit model estimation function, so you decide to sending the data to R to do the estimation.</p>
+<p>The variables <code>admit</code>, <code>gre</code>, <code>gpa</code>, and <code>rank</code> all exist in your D program as <code>double[]</code> arrays. You copy the data into R, creating new R variables in the process:</p>
+<pre><code>admit.toR(&quot;admit&quot;);
+gre.toR(&quot;gre&quot;);
+gpa.toR(&quot;gpa&quot;);
+rank.toR(&quot;rank&quot;);</code></pre>
+<p>Then you estimate the model:</p>
+<pre><code>evalRQ(`mylogit &lt;- glm(admit ~ gre + gpa + rank, family = &quot;binomial&quot;)`);</code></pre>
+<p>It is tempting to make the residual vector available to your D program by creating an RVector:</p>
+<pre><code>auto res = RVector(&quot;residuals(mylogit)&quot;);</code></pre>
+<p>That <em>might</em> work, and it will even <em>probably</em> work (as in 99.8% of the time). Occasionally, though, it might not. It’s tempting to do that because all you’re doing is passing one pointer from R to D for efficiency.</p>
+<p>The problem is that there is no guarantee that an object allocated in R and won’t change. (In this case, I can’t think of any way the underlying data might change, but in general you can’t assume that it won’t.) For safety purposes, you should make a copy of the data, for instance</p>
+<pre><code>double[] res = RVector(&quot;residuals(mylogit)&quot;).array;</code></pre>
+<p>For full details, and more information about when this can cause problems, see <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Named-objects-and-copying">this discussion</a> in the R Extensions manual. Copying is sometimes an expensive operation. If you can’t afford it, you probably shouldn’t be calling into R.</p>
+
+<br>
+</div>
+<br><br>
+</body>
+</html>
