@@ -2,7 +2,7 @@
 
 D is a nice programming language, but it doesn't have many libraries for 
 statistical analysis. One way to solve that problem would be to port all 
-of R's libraries to D. With a few million programmer hours, you could 
+of R's libraries to D. With a million programmer hours, you could 
 get a good start on that task. A more realistic solution, taken here, is 
 to facilitate communication between D and R. This can be done in two ways:
 
@@ -13,7 +13,7 @@ This procedure is commonly used to call C, C++, and Fortran code from R.
 The primary advantage of this approach is that other R users can call 
 the D functions you've written, even if they don't know anything about 
 D. Currently, this can be done using DMD or LDC on Linux, and LDC on
-Windows or Mac.
+Mac.
 
 **Calling R functions from D.** You can use the excellent 
 [RInside](https://github.com/eddelbuettel/rinside) project to embed an R 
@@ -34,7 +34,7 @@ years. You shouldn't expect to see much activity in an interface between
 two mature languages; regularly adding features would be a sign that
 something is wrong.
 
-If something doesn't work, [file an issue](https://bitbucket.org/bachmeil/embedr/issues). 
+As of this update (Jan 04, 2020) I am unaware of anything that doesn't work. If something doesn't work, [file an issue](https://bitbucket.org/bachmeil/embedr/issues). 
 
 # Documentation
 
@@ -66,36 +66,11 @@ the system can't find it) you are done.
 
 ## Windows Installation
 
-*Update (04/13/2019): This threw errors the last time I tried it. There were changes in the recent versions of LDC and I can no longer get things to compile correctly. I strongly encourage you to use WSL. As always, I'm happy to let a Windows user take over that part of the project, as I'd rather not spend all of my limited time supporting an OS I don't use and, to my knowledge, nobody else has ever used for this. Moreover, since all you're doing is compiling code, it shouldn't take much for an actual Windows user.*
+*Update (Jan 04, 2020):* I've decided to officially abandon Windows support. The main reason for this is the fact that Microsoft's WSL works so well, and is so convenient to use, that you should be using it if at all possible. See [this article](https://code.visualstudio.com/docs/remote/wsl) for using VS Code with WSL. I've used that approach and it's a very reasonable choice - there's essentially no difference in the editing/compiling/running steps, with the exception that the Windows approach is messier. 
 
-If you are using Windows 10, I recommend using WSL along with ConEmu.
-In my experience, it works smoothly, and you have access to all of your
-Windows directories from inside WSL. If you don't want to do that, you
-might try [Docker](https://lancebachmeier.com/embedr/dockerusage.html).
+Windows 10 has now been out for five years. Windows 7 is losing Microsoft's support soon, and Windows 8 is not heavily used. I doubt there is even one Windows 7 or 8 user of embedr.
 
-The reason for avoiding native Windows development is not that it doesn't
-work, but because it requires extra steps. You can read details
-[here](https://lancebachmeier.com/computing/d-from-r-windows.html).
-
-The instructions that follow tell you how to use the embedr package to install the 
-LDC compiler and let it do the configuration for you. *Update: These instructions no longer work for me.* I can't make any guarantees because Windows has problems with directories changing to read-only status. I plan to keep improving the situation, but unfortunately I don't have much time to devote to an OS I don't use (and when I do,
-I find WSL comfortable). *Update: I no longer have plans to improve the Windows situation due to changes in my work obligations.* 
-
-1\. Install R. I recommend updating to the latest version of R.  
-2\. Install the embedr package using devtools:
-
-```
-library(devtools)
-install_bitbucket("bachmeil/embedr")
-```
-    
-3\. Install the LDC compiler and configure everything:
-
-```
-library(embedr)
-ldc.install()
-embedr.configure()
-```
+I'm happy to accept pull requests if someone wants to take over Windows support. Furthermore, you might try [Docker](https://lancebachmeier.com/embedr/dockerusage.html).
 
 ## Mac Installation
 
@@ -173,35 +148,6 @@ shared library using the `dmd` function:
 
 ```
 compileFile("librtest.d", "rtest")
-```
-
-Test it out:
-
-```
-.Call("add", 2.5, 3.65)
-```
-
-## Simple Example (Windows)
-
-*Update (04/13/2019): This no longer works for me.* The same thing can be achieved in Windows as follows. Save this code in
-librtest.d:
-
-```
-import embedr.r;
-mixin(createRLibrary("rtest"));
-
-export extern(C) {
-  Robj add(Robj rx, Robj ry) {
-    double result = rx.scalar + ry.scalar;
-    return result.robj;
-  }
-}
-```
-
-In the same directory as librtest.d, create and load the DLL:
-
-```
-ldc("librtest")
 ```
 
 Test it out:
