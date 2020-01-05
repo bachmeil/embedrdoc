@@ -1,5 +1,6 @@
 index:
-	pandoc -s --toc index.md -o index.html --template=template3.html
+	pandoc -s --toc index.md -o index.html --template=template3.html --metadata pagetitle='embedr: D and R interoperability'
+	cp index.html site/
 
 doc:
 	doc2 -i -p .
