@@ -62,7 +62,7 @@ nav {
 <li><a href="#overview">Overview</a></li>
 <li><a href="#is-this-project-active">Is This Project Active?</a></li>
 <li><a href="#documentation">Documentation</a></li>
-<li><a href="#calling-d-functions-from-r">Calling D Functions From R</a><ul>
+<li><a href="#help">Help</a><ul>
 <li><a href="#linux-installation">Linux Installation</a></li>
 <li><a href="#windows-installation">Windows Installation</a></li>
 <li><a href="#mac-installation">Mac Installation</a></li>
@@ -87,30 +87,32 @@ nav {
 <li><a href="#faq">FAQ</a></li>
 </ul>
 <h1 id="overview">Overview</h1>
-<p>D is a nice programming language, but it doesn’t have many libraries for statistical analysis. One way to solve that problem would be to port all of R’s libraries to D. With a million programmer hours, you could get a good start on that task. A more realistic solution, taken here, is to facilitate communication between D and R. This can be done in two ways:</p>
-<p><strong>Calling D functions from R.</strong> The main program is written in R, but bottlenecks and anything for which D is better are written in D, compiled into a shared library, and loaded into R. This procedure is commonly used to call C, C++, and Fortran code from R. The primary advantage of this approach is that other R users can call the D functions you’ve written, even if they don’t know anything about D. Currently, this can be done using DMD or LDC on Linux, and LDC on Mac.</p>
-<p><strong>Calling R functions from D.</strong> You can use the excellent <a href="https://github.com/eddelbuettel/rinside">RInside</a> project to embed an R interpreter inside your D program. Data is passed efficiently because everything in R is a C struct (SEXPREC). You can allocate SEXPREC structs from D code and pass pointers to them between the languages. This approach is best for someone that prefers to write as much as possible in D without giving up any functionality they have in R.</p>
+<p>One of the limitations of the D programming language is that it doesn’t have the same selection of libraries for data analysis that you have in a language like R. One way to solve that problem would be to port the many thousands of R libraries to D. Doing that would take millions of programmer hours, and new R libraries appear every day. A more realistic solution, which I’ve taken here, is to facilitate communication between D and R. This can take two forms:</p>
+<p><strong>Calling D functions from R.</strong> The main program is written in R, but bottlenecks and anything for which D is better are written in D, compiled into a shared library, and loaded into R. This is the procedure commonly used to call C, C++, and Fortran code from R. Other R users can call the D functions you’ve written even if they don’t know anything about D.</p>
+<p><strong>Calling R functions from D.</strong> You can use the excellent <a href="https://github.com/eddelbuettel/rinside">RInside</a> project to embed an R interpreter inside your D program. Data is passed efficiently because everything in R is a C struct (SEXPREC). You can allocate these structs from D code and pass pointers to them between the languages. This approach is of particular interest to a current R user wanting to move to D without giving up any of their existing R code and libraries.</p>
 <h1 id="is-this-project-active">Is This Project Active?</h1>
 <p>This project is largely complete. Lack of recent activity is a sign that the project is stable. I realize that there’s a trend to say projects are dead if no new features have been added in the last 30 days. If you see that the last activity was two years ago, that means it’s been working so well that I haven’t had a reason to make any changes in two years. You shouldn’t expect to see much activity in an interface between two mature languages; regularly adding features would be a sign that something is wrong.</p>
-<p>As of this update (Jan 04, 2020) I am unaware of anything that doesn’t work. If something doesn’t work, <a href="https://bitbucket.org/bachmeil/embedr/issues">file an issue</a>.</p>
+<p>As of this update (January 2020) I am unaware of anything that doesn’t work. If something doesn’t work, <a href="https://bitbucket.org/bachmeil/embedr/issues">file an issue</a>.</p>
 <h1 id="documentation">Documentation</h1>
 <p>Documentation was produced using <a href="https://github.com/adamdruppe/adrdox">adrdox</a>. You can view it <a href="doc/embedr.html">here</a>.</p>
-<h1 id="calling-d-functions-from-r">Calling D Functions From R</h1>
-<p>I have successfully done this on Linux, Mac, and Windows. Linux support is best because that’s the OS I use. <a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> to ask a question if you can’t get it to work.</p>
+<h1 id="help">Help</h1>
+<p><a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> to ask a question if you can’t get it to work. I have successfully used this library on Linux, Mac, and Windows, but I probably can’t help much on Mac or Windows, since I don’t have access to development machines running either of those operating systems.</p>
 <h2 id="linux-installation">Linux Installation</h2>
 <p>If you only want to call D functions from R, installation is easy.</p>
 <p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R. 2. Install the embedr package using devtools:</p>
 <pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
-<p>That is it. If you have a standard installation (i.e., as long as you haven’t done something strange to cause libR.so to be hidden in a place the system can’t find it) you are done.</p>
+<p>If you have a standard installation (i.e., as long as you haven’t done something strange to cause libR.so to be hidden in a place the system can’t find it) installation is done.</p>
 <h2 id="windows-installation">Windows Installation</h2>
-<p><em>Update (Jan 04, 2020):</em> I’ve decided to officially abandon Windows support. The main reason for this is the fact that Microsoft’s WSL works so well, and is so convenient to use, that you should be using it if at all possible. See <a href="https://code.visualstudio.com/docs/remote/wsl">this article</a> for using VS Code with WSL. I’ve used that approach and it’s a very reasonable choice - there’s essentially no difference in the editing/compiling/running steps, with the exception that the Windows approach is messier.</p>
-<p>Windows 10 has now been out for five years. Windows 7 is losing Microsoft’s support soon, and Windows 8 is not heavily used. I doubt there is even one Windows 7 or 8 user of embedr.</p>
-<p>I’m happy to accept pull requests if someone wants to take over Windows support. Furthermore, you might try <a href="https://lancebachmeier.com/embedr/dockerusage.html">Docker</a>.</p>
+<p><em>Update (January 2020):</em> I’ve decided to officially abandon Windows support. The main reason for this is the fact that Microsoft’s WSL is so convenient to use, that you should be using it if at all possible. See <a href="https://code.visualstudio.com/docs/remote/wsl">this article</a> on using VS Code with WSL. I’ve used that approach and it works well. There’s no meaningful difference in the editing/compiling/running steps relative to doing that in Windows natively, except that setup is more complicated.</p>
+<p>WSL is available only for Windows 10, but Windows 10 has been out for five years, Windows 7 is no longer supported, and Windows 8 is not heavily used. I’m more than happy to accept pull requests if someone wants to take over Windows support.</p>
+<p>Docker also works. You can find <a href="https://lancebachmeier.com/embedr/dockerusage.html">an example here</a>.</p>
 <h2 id="mac-installation">Mac Installation</h2>
-<p>Installation on Mac is similar to Linux, but as I do not have access to a Mac, it is hard for me to add that functionality to embedr. That is the only reason embedr does not currently support Mac. <a href="https://lancebachmeier.com/embedr/dockerusage.html">Docker</a> works well. Please contact me if you are a Mac user and would like to take over embedr’s Mac support. <a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> if you have questions about getting it to work. I’ll gladly add Mac support if someone sends me a recent model Macbook or the money to buy one. (Just to be clear, I don’t actually expect anyone to do that, but that’s what it will take.)</p>
+<p>Installation on Mac is similar to Linux, but as I don’t have access to a Mac, it’s hard for me to add that functionality to embedr.</p>
+<p><a href="https://lancebachmeier.com/embedr/dockerusage.html">Docker</a> works well.</p>
+<p>Please contact me if you are a Mac user and would like to take over embedr’s Mac support. <a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> if you have questions about getting it to work.</p>
 <h1 id="embedding-r-inside-d">Embedding R Inside D</h1>
-<p>This should work without problems on Linux, Windows, or Mac, but I’ve only been able to test it on Linux. The easy approach is to do the compilation with the embedr package. Alternatively, you can use Dub, and I provide an example dub.sdl file below.</p>
-<p>Currently I can only give documentation for Linux because that is all I have used. There is no reason that it won’t work on Windows or Mac, especially if you use Dub. If you use one of those platforms and you are interested in adding official support to embedr, please contact me.</p>
+<p>I show first how to compile and run from within R. I also provide an example dub.sdl file below if that’s your preference.</p>
+<p>Currently I can only give documentation for Linux because that is all I have used. If you use Windows or Mac and are interested in adding documentation, please let me know.</p>
 <h2 id="linux-installation-1">Linux Installation</h2>
 <p>Embedding R inside D requires you to install a slightly modified version of the RInside package in addition to everything above.</p>
 <p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R.<br />
@@ -147,16 +149,25 @@ dmd(&quot;hello&quot;)</code></pre>
 <p>This tells dmd to compile your file, handling includes and linking for you, and then run it for you. You should see “Hello, World!” printed somewhere. The other examples are the same: save the code in a .d file, then call the dmd function to compile and run it.</p>
 <h1 id="dub">Dub</h1>
 <p>I do not normally use Dub. However, many folks do, and if you want to add dependencies on other libraries like Mir, you don’t have much choice but to use Dub.</p>
-<p>Here’s the dub.sdl file I used to compile the Hello World example above:</p>
+<p>Put hello.d in a subdirectory called <code>src</code>. In your project’s root directory, i.e., the parent of <code>src</code>, put a file called <code>dub.sdl</code> with the following information:</p>
 <pre><code>name &quot;myproject&quot;
 description &quot;embedr hello world&quot;
-authors &quot;lance&quot;
-copyright &quot;Copyright 2018, lance&quot;
+authors &quot;Lance Bachmeier&quot;
+copyright &quot;Copyright 2020, Lance Bachmeier&quot;
 license &quot;GPLv2&quot;
-versions &quot;r&quot; &quot;standalone&quot;
+versions &quot;standalone&quot;
+targetType &quot;executable&quot;
 lflags &quot;/usr/lib/libR.so&quot; &quot;/usr/local/lib/R/site-library/RInsideC/lib/libRInside.so&quot;</code></pre>
-<p>The <code>lflags</code> paths may be different on your machine, and they definitely will be different if you’re not using Linux.</p>
-<p>If you are familiar with Dub and want to create a package for code.dlang.org, please do. You don’t need my permission.</p>
+<p>The <code>lflags</code> paths may be different on your machine. The first argument points to libR.so, which depends on where R is installed. The second argument depends on where the RInsideC package is installed. To find these, I use this in Bash:</p>
+<pre><code>locate libR.so -l 1</code></pre>
+<p>and this in R:</p>
+<pre><code>paste0(find.package(&quot;RInsideC&quot;)[1], &quot;/lib/libRInside.so&quot;)</code></pre>
+<p>Alternatively, open R in your project directory and run the following:</p>
+<pre><code>library(embedr)
+dubNew()</code></pre>
+<p>and it will create a dub.sdl file including the correct paths, create a src/ directory if it doesn’t exist, and add r.d to the src/ directory if it’s not already there.</p>
+<p>Drop your source files into the src/ subdirectory, open the terminal in the project root directory, and compile/run with</p>
+<pre><code>dub run</code></pre>
 <h1 id="pulling-r-data-into-d">Pulling R Data Into D</h1>
 <p>If you are embedding R inside a D program, and you want to pull data from R into D, please read <a href="pulling-r-data.html">this</a> first.</p>
 <h1 id="more-examples">More Examples</h1>
