@@ -1,27 +1,27 @@
 # Overview
 
-D is a nice programming language, but it doesn't have many libraries for 
-statistical analysis. One way to solve that problem would be to port all 
-of R's libraries to D. With a few million programmer hours, you could 
-get a good start on that task. A more realistic solution, taken here, is 
-to facilitate communication between D and R. This can be done in two ways:
+One of the limitations of the D programming language is that it doesn't
+have the same selection of libraries for data analysis that you have in
+a language like R. One way to solve that problem would be to port the many 
+thousands of R libraries to D. Doing that would take millions of
+programmer hours, and new R libraries appear every day. A more realistic
+solution, which I've taken here, is to facilitate communication between
+D and R. This can take two forms:
 
 **Calling D functions from R.** The main program is written in R, but 
 bottlenecks and anything for which D is better are written in D, 
-compiled into a shared library, and loaded into R. 
-This procedure is commonly used to call C, C++, and Fortran code from R. 
-The primary advantage of this approach is that other R users can call 
-the D functions you've written, even if they don't know anything about 
-D. Currently, this can be done using DMD or LDC on Linux, and LDC on
-Windows or Mac.
+compiled into a shared library, and loaded into R. This is the procedure
+commonly used to call C, C++, and Fortran code from R. 
+Other R users can call 
+the D functions you've written even if they don't know anything about D.
 
 **Calling R functions from D.** You can use the excellent 
 [RInside](https://github.com/eddelbuettel/rinside) project to embed an R 
 interpreter inside your D program. Data is passed efficiently because 
-everything in R is a C struct (SEXPREC). You can allocate SEXPREC 
+everything in R is a C struct (SEXPREC). You can allocate these 
 structs from D code and pass pointers to them between the languages. 
-This approach is best for someone that prefers to write as much as
-possible in D without giving up any functionality they have in R.
+This approach is of particular interest to a current R user wanting
+to move to D without giving up any of their existing R code and libraries.
 
 # Is This Project Active?
 
