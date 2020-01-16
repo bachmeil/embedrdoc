@@ -34,7 +34,7 @@ years. You shouldn't expect to see much activity in an interface between
 two mature languages; regularly adding features would be a sign that
 something is wrong.
 
-If something doesn't work, [file an issue](https://bitbucket.org/bachmeil/embedr/issues). 
+As of this update (Jan 04, 2020) I am unaware of anything that doesn't work. If something doesn't work, [file an issue](https://bitbucket.org/bachmeil/embedr/issues). 
 
 # Documentation
 
@@ -66,38 +66,11 @@ the system can't find it) you are done.
 
 ## Windows Installation
 
-If you are using Windows 10, I recommend using WSL along with ConEmu.
-In my experience, it works smoothly, and you have access to all of your
-Windows directories from inside WSL. If you don't want to do that, you
-might try [Docker](https://lancebachmeier.com/embedr/dockerusage.html).
+*Update (Jan 04, 2020):* I've decided to officially abandon Windows support. The main reason for this is the fact that Microsoft's WSL works so well, and is so convenient to use, that you should be using it if at all possible. See [this article](https://code.visualstudio.com/docs/remote/wsl) for using VS Code with WSL. I've used that approach and it's a very reasonable choice - there's essentially no difference in the editing/compiling/running steps, with the exception that the Windows approach is messier. 
 
-The reason for avoiding native Windows development is not that it doesn't
-work, but because it requires extra steps. You can read details
-[here](https://lancebachmeier.com/computing/d-from-r-windows.html).
+Windows 10 has now been out for five years. Windows 7 is losing Microsoft's support soon, and Windows 8 is not heavily used. I doubt there is even one Windows 7 or 8 user of embedr.
 
-The instructions that follow tell you how to use the embedr package to install the 
-LDC compiler and let it do the configuration for you. I can't make any
-guarantees because Windows has problems with directories changing to
-read-only status. I plan to keep improving the situation, but unfortunately
-I don't have much time to devote to an OS I don't use (and when I do,
-I find WSL comfortable). Ideally, a Windows user will work with embedr 
-and take over that part of development. 
-
-1\. Install R. I recommend updating to the latest version of R.  
-2\. Install the embedr package using devtools:
-
-```
-library(devtools)
-install_bitbucket("bachmeil/embedr")
-```
-    
-3\. Install the LDC compiler and configure everything:
-
-```
-library(embedr)
-ldc.install()
-embedr.configure()
-```
+I'm happy to accept pull requests if someone wants to take over Windows support. Furthermore, you might try [Docker](https://lancebachmeier.com/embedr/dockerusage.html).
 
 ## Mac Installation
 
@@ -107,7 +80,7 @@ That is the only reason embedr does not currently support Mac.
 [Docker](https://lancebachmeier.com/embedr/dockerusage.html) works well.
 Please contact me if you are a Mac user and would like to take over
 embedr's Mac support. [File an issue](https://bitbucket.org/bachmeil/embedr/issues)
-if you have questions about getting it to work.
+if you have questions about getting it to work. I'll gladly add Mac support if someone sends me a recent model Macbook or the money to buy one. (Just to be clear, I don't actually expect anyone to do that, but that's what it will take.)
 
 # Embedding R Inside D
 
@@ -183,35 +156,6 @@ Test it out:
 .Call("add", 2.5, 3.65)
 ```
 
-## Simple Example (Windows)
-
-The same thing can be achieved in Windows as follows. Save this code in
-librtest.d:
-
-```
-import embedr.r;
-mixin(createRLibrary("rtest"));
-
-export extern(C) {
-  Robj add(Robj rx, Robj ry) {
-    double result = rx.scalar + ry.scalar;
-    return result.robj;
-  }
-}
-```
-
-In the same directory as librtest.d, create and load the DLL:
-
-```
-ldc("librtest")
-```
-
-Test it out:
-
-```
-.Call("add", 2.5, 3.65)
-```
-
 # Example: Calling R Functions From D
 
 Let's start with an example that tells R print "Hello, World!" to the 
@@ -257,6 +201,12 @@ lflags "/usr/lib/libR.so" "/usr/local/lib/R/site-library/RInsideC/lib/libRInside
 
 The `lflags` paths may be different on your machine, and they definitely
 will be different if you're not using Linux.
+
+If you are familiar with Dub and want to create a package for code.dlang.org, please do. You don't need my permission.
+
+# Pulling R Data Into D
+
+If you are embedding R inside a D program, and you want to pull data from R into D, please read [this](pulling-r-data.html) first.
 
 # More Examples
 
