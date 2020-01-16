@@ -125,7 +125,7 @@ install_bitbucket("bachmeil/rinsidec")
 install_bitbucket("bachmeil/embedr")
 ```
 
-That is it. If you have a standard installation (i.e., as long as you 
+If you have a standard installation (i.e., as long as you 
 haven't done something strange to cause libR.so to be hidden in a place 
 the system can't find it) you are done.
 

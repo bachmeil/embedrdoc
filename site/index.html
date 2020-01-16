@@ -121,7 +121,7 @@ nav {
 install_bitbucket(&quot;bachmeil/rinsidec&quot;)</code></pre>
 <p>3. Install the embedr package using devtools:</p>
 <pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
-<p>That is it. If you have a standard installation (i.e., as long as you haven’t done something strange to cause libR.so to be hidden in a place the system can’t find it) you are done.</p>
+<p>If you have a standard installation (i.e., as long as you haven’t done something strange to cause libR.so to be hidden in a place the system can’t find it) you are done.</p>
 <h1 id="example-calling-d-functions-from-r">Example: Calling D Functions From R</h1>
 <p>Note that Windows requires an explicit export attribute when defining a function that is to be included as part of a shared library. I present both versions of the simple example to clarify that, but for the other examples you will have to add the export attribute. There are some other differences in the Linux and Windows versions. These are due to the fact that those functions were created at different times, and I have not yet had time to make things consistent. I will eventually get around to doing that.</p>
 <h2 id="simple-example-linux">Simple Example (Linux)</h2>
