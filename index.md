@@ -34,7 +34,49 @@ years. You shouldn't expect to see much activity in an interface between
 two mature languages; regularly adding features would be a sign that
 something is wrong.
 
-As of this update (January 2020) I am unaware of anything that doesn't work. If something doesn't work, [file an issue](https://bitbucket.org/bachmeil/embedr/issues). 
+# News
+
+## July 2020
+
+I have three bits of information to share this month:
+
+- At the time of this update, I am unaware of anything that doesn't work.
+If something doesn't work, [file an issue](https://bitbucket.org/bachmeil/embedr/issues).
+- I plan to move embedr to Github when time allows. Some of the changes 
+they've been making to Bitbucket have greatly reduced its usability. The
+most notable is that I can only view three lines of code when opening a
+source code file on my laptop.
+- I want to add more examples and better documentation. If there's
+anything unclear or you'd like an example, [file an issue](https://bitbucket.org/bachmeil/embedr/issues).
+I'm in the process of updating this file.
+
+## March 2020
+
+Dirk Eddelbuettel merged the changes I made for RInsideC into RInside.
+That simplifies installation and usage. It should mean you can embed R
+inside a D program on Windows as long as you can get RInside to work on
+Windows.
+
+## January 2020
+
+There are two bits of information to share this month:
+
+- I published [a post about embedr on the D blog](https://dlang.org/blog/2020/01/27/d-for-data-science-calling-r-from-d/).
+- I've officially given up on native Windows and Docker support. I did 
+have both working properly a few years ago. This decision is driven by
+three factors:
+    - WSL has matured to the point that there's no longer a good reason 
+    not to use it.
+    - Almost all Windows development now takes place on Windows 10.
+    - I don't use Windows and don't have time to dedicate to a
+    platform I don't use or understand. To be honest, I'm not aware of 
+    even a single Windows user of embedr.
+    
+    See [this article](https://code.visualstudio.com/docs/remote/wsl) on 
+VS Code with WSL. I've tested it and it works well. There's 
+no meaningful difference in the editing/compiling/running steps relative
+to doing that in Windows natively, except that setup is more complicated
+if doing it natively. 
 
 # Documentation
 
@@ -45,18 +87,18 @@ You can view it [here](doc/embedr.html).
 
 [File an issue](https://bitbucket.org/bachmeil/embedr/issues)
 to ask a question if you can't get it to work. I have successfully used
-this library on Linux, Mac, and Windows, but I probably can't help much
-on Mac or Windows, since I don't have access to development machines
-running either of those operating systems.
+this library on Linux, Mac, and Windows at one time or another, but I 
+probably can't help much on Mac or Windows, since I don't have access to
+development machines running either of those operating systems.
 
-## Linux Installation
+# Installation
 
-If you only want to call D functions from R, installation is easy.
+## Linux: Calling D functions from R
 
-1\. Install R and the [dmd compiler](http://dlang.org/download.html) 
+1. Install R and the [dmd compiler](http://dlang.org/download.html) 
 (obvious, I know, but I just want to be sure). I recommend updating to 
 the latest version of R.
-2\. Install the embedr package using devtools:
+2. Install the embedr package using devtools:
 
 ```
 install_bitbucket("bachmeil/embedr")
@@ -66,80 +108,34 @@ If you have a standard installation (i.e., as long as you
 haven't done something strange to cause libR.so to be hidden in a place 
 the system can't find it) installation is done.
 
+## Linux: Embedding an R interpreter inside a D program
+
+This requires an additional step. After installing embedr as described above, install the RInside package:
+
+```
+install.packages("RInside")
+```
+
+Note: This functionality was only recently added to RInside. You'll need
+to update if you have an older version of RInside installed.
+
 ## Windows Installation
 
-*Update (January 2020):* I've decided to officially abandon Windows 
-support. The main reason for this is the fact that Microsoft's WSL is so 
-convenient to use, that you should be using it if at all possible. See 
-[this article](https://code.visualstudio.com/docs/remote/wsl) on using 
-VS Code with WSL. I've used that approach and it works well. There's 
-no meaningful difference in the editing/compiling/running steps relative
-to doing that in Windows natively, except that setup is more complicated.
+See the news item for January 2020. 
 
-WSL is available only for Windows 10, but Windows 10 has been out for 
-five years, Windows 7 is no longer supported, and Windows 8 is not 
-heavily used. I'm more than happy to accept pull requests if someone 
-wants to take over Windows support.
+An older, previously working Docker
+file [can be found here](https://lancebachmeier.com/embedr/dockerusage.html).
+That's ancient, so I'm not sure if it will help you.
 
-Docker also works. You can find [an example here](https://lancebachmeier.com/embedr/dockerusage.html).
+I'll be happy to let someone else take over Windows support.
 
 ## Mac Installation
 
-Installation on Mac is similar to Linux, but as I don't have access to
-a Mac, it's hard for me to add that functionality to embedr.
+Mac installation probably works the same as Linux, but since I don't have
+a machine to test with, I can't say. I'll be happy to let someone else
+take over Mac support.
 
-[Docker](https://lancebachmeier.com/embedr/dockerusage.html) works well.
-
-Please contact me if you are a Mac user and would like to take over
-embedr's Mac support. [File an issue](https://bitbucket.org/bachmeil/embedr/issues)
-if you have questions about getting it to work.
-
-# Embedding R Inside D
-
-I show first how to compile and run from within R. I also provide an 
-example dub.sdl file below if that's your preference.
-
-Currently I can only give documentation for Linux because that is all I
-have used. If you use Windows or Mac and are
-interested in adding documentation, please let me know.
-
-## Linux Installation
-
-Embedding R inside D requires you to install a slightly modified version 
-of the RInside package in addition to everything above.
-
-1\. Install R and the [dmd compiler](http://dlang.org/download.html) 
-(obvious, I know, but I just want to be sure). I recommend updating to 
-the latest version of R.  
-2\. Install [RInsideC](https://bitbucket.org/bachmeil/rinsidec) using 
-devtools. In R:
-    
-```
-library(devtools)
-install_bitbucket("bachmeil/rinsidec")
-```
-    
-3\. Install the embedr package using devtools:
-
-```
-install_bitbucket("bachmeil/embedr")
-```
-
-If you have a standard installation (i.e., as long as you 
-haven't done something strange to cause libR.so to be hidden in a place 
-the system can't find it) you are done.
-
-# Example: Calling D Functions From R
-
-Note that Windows requires an explicit export attribute when defining a
-function that is to be included as part of a shared library. I present
-both versions of the simple example to clarify that, but for the other examples
-you will have to add the export attribute. There are some other differences
-in the Linux and Windows versions. These are due to the fact that those
-functions were created at different times, and I have not yet had time
-to make things consistent. I will eventually get around to doing that.
-
-## Simple Example (Linux)
+# Calling D Functions From R: A Simple Example
 
 Save this code in a file called librtest.d:
 
@@ -165,7 +161,7 @@ Test it out:
 .Call("add", 2.5, 3.65)
 ```
 
-# Example: Calling R Functions From D
+# Calling R From D: A Simple Example
 
 Let's start with an example that tells R print "Hello, World!" to the 
 screen. Put the following code in a file named hello.d:
@@ -250,8 +246,8 @@ If you are embedding R inside a D program, and you want to pull data from R into
 
 # More Examples
 
-The examples above were too basic to be practical. Here are some examples
-that demonstrate more useful functionality.
+The examples above were too basic to be practical. Here are some more
+substantial examples.
 
 ## Passing a Matrix From D to R
 

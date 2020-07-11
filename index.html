@@ -11,29 +11,63 @@
 <style type="text/css">
 .content {
     margin: auto;
-    max-width: 800px;
-    font-size: 100%;
+    max-width: 920px;
+    font-size: 123%;
     margin-top: 20px;
+    margin-bottom: 90px;
+    font-family: Roboto, Arial, sans-serif;
 }
 
 a {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 h1 {
-	font-family: sans;
-	font-size: 150%;
+	font-size: 160%;
+	line-height: 1.22em;
+  font-family: Ubuntu, "Trebuchet MS", sans-serif;
 }
 
-h2, h3 {
-	font-family: sans;
-	font-size: 125%;
+h2 {
+  font-family: Ubuntu, "Trebuchet MS", sans-serif;
+  font-size: 110%;
+	line-height: 0.5em;
+	margin-bottom: 0px;
 }
 
-nav {
-  position: absolute;
+code {
+  font-family: "Ubuntu Mono", "Courier New", monospace;
+  font-size: 110%;
+  background: none;
 }
 
+pre > code {
+  padding: .2rem .5rem;
+  margin: 0 .2rem;
+  white-space: nowrap;
+  border: 1px solid gray;
+  border-radius: 1px;
+  display: block;
+  padding: 1rem 1.5rem;
+  white-space: pre-wrap; 
+}
+
+pre {
+	background: none;
+}
+
+.header {
+  text-align: right;
+  color: brown;
+}
+
+blockquote {
+  font-family: Georgia, serif;
+}
+
+blockquote:before {
+  border-left: 1px solid gray;
+}
 </style>
 </head>
 <body>
@@ -61,22 +95,27 @@ nav {
 <ul>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#is-this-project-active">Is This Project Active?</a></li>
+<li><a href="#news">News</a>
+<ul>
+<li><a href="#july-2020">July 2020</a></li>
+<li><a href="#march-2020">March 2020</a></li>
+<li><a href="#january-2020">January 2020</a></li>
+</ul></li>
 <li><a href="#documentation">Documentation</a></li>
-<li><a href="#help">Help</a><ul>
-<li><a href="#linux-installation">Linux Installation</a></li>
+<li><a href="#help">Help</a></li>
+<li><a href="#installation">Installation</a>
+<ul>
+<li><a href="#linux-calling-d-functions-from-r">Linux: Calling D functions from R</a></li>
+<li><a href="#linux-embedding-an-r-interpreter-inside-a-d-program">Linux: Embedding an R interpreter inside a D program</a></li>
 <li><a href="#windows-installation">Windows Installation</a></li>
 <li><a href="#mac-installation">Mac Installation</a></li>
 </ul></li>
-<li><a href="#embedding-r-inside-d">Embedding R Inside D</a><ul>
-<li><a href="#linux-installation-1">Linux Installation</a></li>
-</ul></li>
-<li><a href="#example-calling-d-functions-from-r">Example: Calling D Functions From R</a><ul>
-<li><a href="#simple-example-linux">Simple Example (Linux)</a></li>
-</ul></li>
-<li><a href="#example-calling-r-functions-from-d">Example: Calling R Functions From D</a></li>
+<li><a href="#calling-d-functions-from-r-a-simple-example">Calling D Functions From R: A Simple Example</a></li>
+<li><a href="#calling-r-from-d-a-simple-example">Calling R From D: A Simple Example</a></li>
 <li><a href="#dub">Dub</a></li>
 <li><a href="#pulling-r-data-into-d">Pulling R Data Into D</a></li>
-<li><a href="#more-examples">More Examples</a><ul>
+<li><a href="#more-examples">More Examples</a>
+<ul>
 <li><a href="#passing-a-matrix-from-d-to-r">Passing a Matrix From D to R</a></li>
 <li><a href="#passing-a-matrix-from-r-to-d">Passing a Matrix From R to D</a></li>
 <li><a href="#rvector">RVector</a></li>
@@ -92,39 +131,51 @@ nav {
 <p><strong>Calling R functions from D.</strong> You can use the excellent <a href="https://github.com/eddelbuettel/rinside">RInside</a> project to embed an R interpreter inside your D program. Data is passed efficiently because everything in R is a C struct (SEXPREC). You can allocate these structs from D code and pass pointers to them between the languages. This approach is of particular interest to a current R user wanting to move to D without giving up any of their existing R code and libraries.</p>
 <h1 id="is-this-project-active">Is This Project Active?</h1>
 <p>This project is largely complete. Lack of recent activity is a sign that the project is stable. I realize that there’s a trend to say projects are dead if no new features have been added in the last 30 days. If you see that the last activity was two years ago, that means it’s been working so well that I haven’t had a reason to make any changes in two years. You shouldn’t expect to see much activity in an interface between two mature languages; regularly adding features would be a sign that something is wrong.</p>
-<p>As of this update (January 2020) I am unaware of anything that doesn’t work. If something doesn’t work, <a href="https://bitbucket.org/bachmeil/embedr/issues">file an issue</a>.</p>
+<h1 id="news">News</h1>
+<h2 id="july-2020">July 2020</h2>
+<p>I have three bits of information to share this month:</p>
+<ul>
+<li>At the time of this update, I am unaware of anything that doesn’t work. If something doesn’t work, <a href="https://bitbucket.org/bachmeil/embedr/issues">file an issue</a>.</li>
+<li>I plan to move embedr to Github when time allows. Some of the changes they’ve been making to Bitbucket have greatly reduced its usability. The most notable is that I can only view three lines of code when opening a source code file on my laptop.</li>
+<li>I want to add more examples and better documentation. If there’s anything unclear or you’d like an example, <a href="https://bitbucket.org/bachmeil/embedr/issues">file an issue</a>. I’m in the process of updating this file.</li>
+</ul>
+<h2 id="march-2020">March 2020</h2>
+<p>Dirk Eddelbuettel merged the changes I made for RInsideC into RInside. That simplifies installation and usage. It should mean you can embed R inside a D program on Windows as long as you can get RInside to work on Windows.</p>
+<h2 id="january-2020">January 2020</h2>
+<p>There are two bits of information to share this month:</p>
+<ul>
+<li>I published <a href="https://dlang.org/blog/2020/01/27/d-for-data-science-calling-r-from-d/">a post about embedr on the D blog</a>.</li>
+<li>I’ve officially given up on native Windows and Docker support. I did have both working properly a few years ago. This decision is driven by three factors:
+<ul>
+<li>WSL has matured to the point that there’s no longer a good reason not to use it.</li>
+<li>Almost all Windows development now takes place on Windows 10.</li>
+<li>I don’t use Windows and don’t have time to dedicate to a platform I don’t use or understand. To be honest, I’m not aware of even a single Windows user of embedr.</li>
+</ul>
+See <a href="https://code.visualstudio.com/docs/remote/wsl">this article</a> on VS Code with WSL. I’ve tested it and it works well. There’s no meaningful difference in the editing/compiling/running steps relative to doing that in Windows natively, except that setup is more complicated if doing it natively.</li>
+</ul>
 <h1 id="documentation">Documentation</h1>
 <p>Documentation was produced using <a href="https://github.com/adamdruppe/adrdox">adrdox</a>. You can view it <a href="doc/embedr.html">here</a>.</p>
 <h1 id="help">Help</h1>
-<p><a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> to ask a question if you can’t get it to work. I have successfully used this library on Linux, Mac, and Windows, but I probably can’t help much on Mac or Windows, since I don’t have access to development machines running either of those operating systems.</p>
-<h2 id="linux-installation">Linux Installation</h2>
-<p>If you only want to call D functions from R, installation is easy.</p>
-<p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R. 2. Install the embedr package using devtools:</p>
+<p><a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> to ask a question if you can’t get it to work. I have successfully used this library on Linux, Mac, and Windows at one time or another, but I probably can’t help much on Mac or Windows, since I don’t have access to development machines running either of those operating systems.</p>
+<h1 id="installation">Installation</h1>
+<h2 id="linux-calling-d-functions-from-r">Linux: Calling D functions from R</h2>
+<ol type="1">
+<li>Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R.</li>
+<li>Install the embedr package using devtools:</li>
+</ol>
 <pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
 <p>If you have a standard installation (i.e., as long as you haven’t done something strange to cause libR.so to be hidden in a place the system can’t find it) installation is done.</p>
+<h2 id="linux-embedding-an-r-interpreter-inside-a-d-program">Linux: Embedding an R interpreter inside a D program</h2>
+<p>This requires an additional step. After installing embedr as described above, install the RInside package:</p>
+<pre><code>install.packages(&quot;RInside&quot;)</code></pre>
+<p>Note: This functionality was only recently added to RInside. You’ll need to update if you have an older version of RInside installed.</p>
 <h2 id="windows-installation">Windows Installation</h2>
-<p><em>Update (January 2020):</em> I’ve decided to officially abandon Windows support. The main reason for this is the fact that Microsoft’s WSL is so convenient to use, that you should be using it if at all possible. See <a href="https://code.visualstudio.com/docs/remote/wsl">this article</a> on using VS Code with WSL. I’ve used that approach and it works well. There’s no meaningful difference in the editing/compiling/running steps relative to doing that in Windows natively, except that setup is more complicated.</p>
-<p>WSL is available only for Windows 10, but Windows 10 has been out for five years, Windows 7 is no longer supported, and Windows 8 is not heavily used. I’m more than happy to accept pull requests if someone wants to take over Windows support.</p>
-<p>Docker also works. You can find <a href="https://lancebachmeier.com/embedr/dockerusage.html">an example here</a>.</p>
+<p>See the news item for January 2020.</p>
+<p>An older, previously working Docker file <a href="https://lancebachmeier.com/embedr/dockerusage.html">can be found here</a>. That’s ancient, so I’m not sure if it will help you.</p>
+<p>I’ll be happy to let someone else take over Windows support.</p>
 <h2 id="mac-installation">Mac Installation</h2>
-<p>Installation on Mac is similar to Linux, but as I don’t have access to a Mac, it’s hard for me to add that functionality to embedr.</p>
-<p><a href="https://lancebachmeier.com/embedr/dockerusage.html">Docker</a> works well.</p>
-<p>Please contact me if you are a Mac user and would like to take over embedr’s Mac support. <a href="https://bitbucket.org/bachmeil/embedr/issues">File an issue</a> if you have questions about getting it to work.</p>
-<h1 id="embedding-r-inside-d">Embedding R Inside D</h1>
-<p>I show first how to compile and run from within R. I also provide an example dub.sdl file below if that’s your preference.</p>
-<p>Currently I can only give documentation for Linux because that is all I have used. If you use Windows or Mac and are interested in adding documentation, please let me know.</p>
-<h2 id="linux-installation-1">Linux Installation</h2>
-<p>Embedding R inside D requires you to install a slightly modified version of the RInside package in addition to everything above.</p>
-<p>1. Install R and the <a href="http://dlang.org/download.html">dmd compiler</a> (obvious, I know, but I just want to be sure). I recommend updating to the latest version of R.<br />
-2. Install <a href="https://bitbucket.org/bachmeil/rinsidec">RInsideC</a> using devtools. In R:</p>
-<pre><code>library(devtools)
-install_bitbucket(&quot;bachmeil/rinsidec&quot;)</code></pre>
-<p>3. Install the embedr package using devtools:</p>
-<pre><code>install_bitbucket(&quot;bachmeil/embedr&quot;)</code></pre>
-<p>If you have a standard installation (i.e., as long as you haven’t done something strange to cause libR.so to be hidden in a place the system can’t find it) you are done.</p>
-<h1 id="example-calling-d-functions-from-r">Example: Calling D Functions From R</h1>
-<p>Note that Windows requires an explicit export attribute when defining a function that is to be included as part of a shared library. I present both versions of the simple example to clarify that, but for the other examples you will have to add the export attribute. There are some other differences in the Linux and Windows versions. These are due to the fact that those functions were created at different times, and I have not yet had time to make things consistent. I will eventually get around to doing that.</p>
-<h2 id="simple-example-linux">Simple Example (Linux)</h2>
+<p>Mac installation probably works the same as Linux, but since I don’t have a machine to test with, I can’t say. I’ll be happy to let someone else take over Mac support.</p>
+<h1 id="calling-d-functions-from-r-a-simple-example">Calling D Functions From R: A Simple Example</h1>
 <p>Save this code in a file called librtest.d:</p>
 <pre><code>extern(C) {
   Robj add(Robj rx, Robj ry) {
@@ -136,7 +187,7 @@ install_bitbucket(&quot;bachmeil/rinsidec&quot;)</code></pre>
 <pre><code>compileFile(&quot;librtest.d&quot;, &quot;rtest&quot;)</code></pre>
 <p>Test it out:</p>
 <pre><code>.Call(&quot;add&quot;, 2.5, 3.65)</code></pre>
-<h1 id="example-calling-r-functions-from-d">Example: Calling R Functions From D</h1>
+<h1 id="calling-r-from-d-a-simple-example">Calling R From D: A Simple Example</h1>
 <p>Let’s start with an example that tells R print “Hello, World!” to the screen. Put the following code in a file named hello.d:</p>
 <pre><code>import embedr.r;
 
@@ -171,7 +222,7 @@ dubNew()</code></pre>
 <h1 id="pulling-r-data-into-d">Pulling R Data Into D</h1>
 <p>If you are embedding R inside a D program, and you want to pull data from R into D, please read <a href="pulling-r-data.html">this</a> first.</p>
 <h1 id="more-examples">More Examples</h1>
-<p>The examples above were too basic to be practical. Here are some examples that demonstrate more useful functionality.</p>
+<p>The examples above were too basic to be practical. Here are some more substantial examples.</p>
 <h2 id="passing-a-matrix-from-d-to-r">Passing a Matrix From D to R</h2>
 <p>Let’s write a program that tells R to allocate a (2x2) matrix, fills the elements in D, and prints it out in both D and R.</p>
 <pre><code>import embedr.r;
