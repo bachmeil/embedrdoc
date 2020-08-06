@@ -36,6 +36,12 @@ something is wrong.
 
 # News
 
+## August 2020
+
+- I added links to related projects below. These are projects that add to
+the functionality of embedr. (Optimization, quadratic programming, Gretl bindings,
+and parallel random number generation optionally using the GSL.)
+
 ## July 2020
 
 I have three bits of information to share this month:
