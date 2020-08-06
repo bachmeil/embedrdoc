@@ -426,6 +426,18 @@ void main() {
 
 There is more functionality available (the entire R API, in fact) but the single goal of this library is to facilitate the passing of commonly-used data types between the two languages. Other libraries are available for the functions in the R standalone math library, optimization, and so on.
 
+# More Functionality
+
+I've written other libraries to be used together with embedr. I haven't had the
+time to turn them into first-tier libraries (or even document them) but here
+they are:
+
+- [dmdoptim](https://bitbucket.org/bachmeil/dmdoptim) Solve optimization problems
+using the compiled code underlying R's `optim` function.
+- [dgretl](https://github.com/bachmeil/dgretl) Convenient bindings to the Gretl library.
+- [dmdquadprog](https://bitbucket.org/bachmeil/dmdquadprog) Quadratic programming.
+- [prng](https://lancebachmeier.com/active/projects/prng/dir?ci=tip) Parallel random number generation, plus bindings to GSL. Haven't looked at this in a while.
+
 # FAQ
 
 [What's the difference between functions dmd and compileFile?](dmd-vs-compilefile.html)  

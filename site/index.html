@@ -95,16 +95,14 @@ blockquote:before {
 <ul>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#is-this-project-active">Is This Project Active?</a></li>
-<li><a href="#news">News</a>
-<ul>
+<li><a href="#news">News</a><ul>
 <li><a href="#july-2020">July 2020</a></li>
 <li><a href="#march-2020">March 2020</a></li>
 <li><a href="#january-2020">January 2020</a></li>
 </ul></li>
 <li><a href="#documentation">Documentation</a></li>
 <li><a href="#help">Help</a></li>
-<li><a href="#installation">Installation</a>
-<ul>
+<li><a href="#installation">Installation</a><ul>
 <li><a href="#linux-calling-d-functions-from-r">Linux: Calling D functions from R</a></li>
 <li><a href="#linux-embedding-an-r-interpreter-inside-a-d-program">Linux: Embedding an R interpreter inside a D program</a></li>
 <li><a href="#windows-installation">Windows Installation</a></li>
@@ -114,8 +112,7 @@ blockquote:before {
 <li><a href="#calling-r-from-d-a-simple-example">Calling R From D: A Simple Example</a></li>
 <li><a href="#dub">Dub</a></li>
 <li><a href="#pulling-r-data-into-d">Pulling R Data Into D</a></li>
-<li><a href="#more-examples">More Examples</a>
-<ul>
+<li><a href="#more-examples">More Examples</a><ul>
 <li><a href="#passing-a-matrix-from-d-to-r">Passing a Matrix From D to R</a></li>
 <li><a href="#passing-a-matrix-from-r-to-d">Passing a Matrix From R to D</a></li>
 <li><a href="#rvector">RVector</a></li>
@@ -123,6 +120,7 @@ blockquote:before {
 <li><a href="#working-with-r-lists">Working With R Lists</a></li>
 <li><a href="#scalars-and-strings">Scalars and Strings</a></li>
 </ul></li>
+<li><a href="#more-functionality">More Functionality</a></li>
 <li><a href="#faq">FAQ</a></li>
 </ul>
 <h1 id="overview">Overview</h1>
@@ -363,6 +361,14 @@ void main() {
   writeln(stringArray(&quot;rstring&quot;));
 }</code></pre>
 <p>There is more functionality available (the entire R API, in fact) but the single goal of this library is to facilitate the passing of commonly-used data types between the two languages. Other libraries are available for the functions in the R standalone math library, optimization, and so on.</p>
+<h1 id="more-functionality">More Functionality</h1>
+<p>I’ve written other libraries to be used together with embedr. I haven’t had the time to turn them into first-tier libraries (or even document them) but here they are:</p>
+<ul>
+<li><a href="https://bitbucket.org/bachmeil/dmdoptim">dmdoptim</a> Solve optimization problems using the compiled code underlying R’s <code>optim</code> function.</li>
+<li><a href="https://github.com/bachmeil/dgretl">dgretl</a> Convenient bindings to the Gretl library.</li>
+<li><a href="https://bitbucket.org/bachmeil/dmdquadprog">dmdquadprog</a> Quadratic programming.</li>
+<li><a href="https://lancebachmeier.com/active/projects/prng/dir?ci=tip">prng</a> Parallel random number generation, plus bindings to GSL. Haven’t looked at this in a while.</li>
+</ul>
 <h1 id="faq">FAQ</h1>
 <p><a href="dmd-vs-compilefile.html">What’s the difference between functions dmd and compileFile?</a><br />
 <a href="r-not-dub.html">Why use R for compilation rather than Dub?</a><br />
