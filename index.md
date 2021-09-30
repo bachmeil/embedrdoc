@@ -36,6 +36,10 @@ something is wrong.
 
 # News
 
+## September 2021
+
+I've not provided any updates here for over a year, mainly because there are no updates. To my knowledge, everything still works as it should, and I haven't had time to do anything new on this due to a massive increase in work resposibilities due to the pandemic. As my work situation converges back to normal, I should have time to write up more documentation and maybe add some additional features. In particular, I need to rewrite the documentation to clarify that RInsideC is no longer relevant; all of that functionality is now included in RInside, it can be installed from CRAN, and it should have full Windows support.
+
 ## August 2020
 
 - I added links to related projects below. These are projects that add to
